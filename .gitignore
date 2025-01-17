@@ -1,0 +1,110 @@
+# ---------------
+# Python
+# ---------------
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+hackathonmfmjan25/
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ---------------
+# Environments
+# ---------------
+.env/
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ---------------
+# Installer logs
+# ---------------
+pip-log.txt
+pip-delete-this-directory.txt
+pip-wheel-metadata/
+
+# ---------------
+# Unit test / coverage reports
+# ---------------
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# ---------------
+# Jupyter Notebook
+# ---------------
+.ipynb_checkpoints
+
+# ---------------
+# Editor / IDE specific
+# ---------------
+# VSCode
+.vscode/
+# PyCharm
+.idea/
+# Spyder
+.spyderproject
+.spyproject
+# Rope
+.ropeproject
+
+# ---------------
+# mypy
+# ---------------
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ---------------
+# Pyre type checker
+# ---------------
+.pyre/
+
+# ---------------
+# mkdocs documentation
+# ---------------
+/site
+
+# ---------------
+# OS-specific files
+# ---------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+# Windows
+Thumbs.db
+ehthumbs.db
