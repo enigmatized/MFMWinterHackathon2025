@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import anthropic
 from openai import OpenAI
+import FinTwitUsers
 
 
 app = Flask(__name__)
@@ -37,6 +38,8 @@ def index():
         #     {"role": "user", "content": user_prompt},
         # ]
         # )
+        user_prompt+= getTweets()
+        print("Did I get tweets")
         res = some_function(user_prompt)
         # Return a very simple HTML page showing the result
         return f"""
@@ -88,15 +91,36 @@ def generate_text():
 
 def some_function(user_prompt):
         client = OpenAI(
-            api_key="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"
+            api_key="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"
             )
 
         completion = client.chat.completions.create(
-        model="gpt-4o", #"gpt-4o-mini",
+        model="gpt-4o-mini", #"gpt-4o", #"gpt-4o-mini",
         store=True,
         messages=[
-            {"role": "user", "content": user_prompt},
+            {"role": "user", "content": "Does this work?"},
         ]
         )
 
         return completion.choices[0].message
+
+
+def getTweets():
+    newLsUsers = FinTwitUsers.create_fintwit_users_from_csv("tweets.csv" )
+    sendToOpenAI = ""
+    for x in newLsUsers:
+
+        if len(x.retreivedTweets) > 0:
+            tweets = ""
+            for (id, tweet) in x.retreivedTweets.items():
+                tweets += "id:" + id +  "tweet" + tweet
+                
+            sendToOpenAI += f"{x.name} has the following tweets: {tweets}\n"
+    prompt = "Can you give me categorize the tweets from a given user, then give a general sentiment of these different tweets?" \
+    + "Can you also group the tweets that are not finance related and give  a general sentiment to them ? " \
+    + "Can you also give me seperate general sentitment for all the finacial related tweets from these users. " \
+    +"I am looking to make financial day trades based on sentiment, specifically extreme sentiment as many times it is mean reverting." \
+    +" Then can you give a general sentiment of each category with a summary of the category in either?" \
+    +"Please do not include any warning about trading, day trading for any warning of any nature." 
+    prompt = prompt + sendToOpenAI
+    return prompt
