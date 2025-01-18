@@ -1,0 +1,3 @@
+
+
+OPENAI = "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"

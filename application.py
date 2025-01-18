@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
 import anthropic
 from openai import OpenAI
+from openai.types.chat.chat_completion_message import ChatCompletionMessage
+import APIKeys
+import BrianCode
 import FinTwitUsers
 
 
@@ -38,13 +41,39 @@ def index():
         #     {"role": "user", "content": user_prompt},
         # ]
         # )
-        user_prompt+= getTweets()
+        
         print("Did I get tweets")
-        res = some_function(user_prompt)
-        # Return a very simple HTML page showing the result
+        res1 = GetOpenAIResponse(user_prompt+ getTweets())
+        res = ShortenResponse(res1)
+        print("Did I get Garrett")
+
+        print(res)
+        [print("-------------------------------------") for x in range(4)]
+        brainsData = ShortenResponse(BrianCode.stock_data("SPY"))
+        print("Did I get Brian data stock")
+        print(brainsData)
+        [print("-------------------------------------") for x in range(4)]
+
+        brainsDataFundemental = ShortenResponse(BrianCode.fundamental_analysis("SPY"))
+        print("Did I get Brian data fundemental")
+        [print("-------------------------------------") for x in range(4)]
+        aggregate = "Given this information, what is the best course of action for the user to take?" + str(res) \
+            + "PROMPT: I and also very concered to the following information. AI/ChatGPT weight the below into consideration and the above as sentiment to guage your analysis" + str(brainsData) + str(brainsDataFundemental)
+        
+        print(str(res))
+
+
+        # print(f"WHAT IS HAPPENING WITH aggregate: {aggregate}")
+        res = GetOpenAIResponse(aggregate)
+        # res = "test"
+
+
+        res_chunks = chunk_string(res, 120)
+        res_wrapped = "\n".join(res_chunks)
+
         return f"""
         <h1>Here is your response:</h1>
-        <pre>{res}</pre>
+        <pre>{res_wrapped}</pre>
         <br>
         <a href="/">Go back</a>
         """
@@ -88,19 +117,33 @@ def generate_text():
 
 
 
+def chunk_string(s, chunk_size=120):
+    return [s[i:i+chunk_size] for i in range(0, len(s), chunk_size)]
 
-def some_function(user_prompt):
+
+
+def ShortenResponse(user_prompt) -> ChatCompletionMessage:
+    user_prompt =  "Can you summarize the below in 5 sentences or less? \n\n" + str(user_prompt)
+    return GetOpenAIResponse(user_prompt)
+
+
+
+def GetOpenAIResponse(user_prompt) -> ChatCompletionMessage:
         client = OpenAI(
-            api_key="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"
+            api_key=APIKeys.OPENAI
             )
 
         completion = client.chat.completions.create(
         model="gpt-4o-mini", #"gpt-4o", #"gpt-4o-mini",
         store=True,
         messages=[
-            {"role": "user", "content": "Does this work?"},
+            {"role": "user", "content": user_prompt},
         ]
         )
+
+        # print(str(completion.choices[0]))
+
+        # [print("-------------------------------------") for x in range(4)]
 
         return completion.choices[0].message
 
@@ -124,3 +167,9 @@ def getTweets():
     +"Please do not include any warning about trading, day trading for any warning of any nature." 
     prompt = prompt + sendToOpenAI
     return prompt
+
+
+def prettyPrintResponse(response):
+    text = str(response).replace('\\n', '\n')
+    for i in range(0, len(str(text))//100):
+        print(text[i*100:(i+1)*100])
