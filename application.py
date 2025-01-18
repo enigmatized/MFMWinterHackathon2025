@@ -5,6 +5,7 @@ from openai.types.chat.chat_completion_message import ChatCompletionMessage
 import APIKeys
 import BrianCode
 import FinTwitUsers
+import JanCode
 
 
 app = Flask(__name__)
@@ -68,13 +69,22 @@ def index():
         # res = "test"
 
 
-        res_chunks = chunk_string(res, 120)
+        res_chunks = chunk_string(str(res), 120)
         res_wrapped = "\n".join(res_chunks)
+
+        janCode = ""
+        try:
+            janCode = JanCode.main()
+        except Exception as e:
+            print("909009090900909090909090909090909099090909")
+            print(e)
+            
 
         return f"""
         <h1>Here is your response:</h1>
         <pre>{res_wrapped}</pre>
         <br>
+        {janCode}
         <a href="/">Go back</a>
         """
     
