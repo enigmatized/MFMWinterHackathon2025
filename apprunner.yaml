@@ -4,8 +4,16 @@ build:
   commands:
     - pip3 install --upgrade pip
     - pip3 install -r requirements.txt
-run:
   env:
     - name: FLASK_APP
       value: application.py
+run:
+  runtime-version: 3.11
+  env:
+    - name: FLASK_APP
+      value: application.py
+  pre-run:    
+    - pip3 install --upgrade pip
+    - pip3 install -r requirements.txt
   command: python3 -m flask run --host 0.0.0.0 --port 8080
+  
